@@ -3,8 +3,6 @@ package pages;
 import utils.PropertiesReader;
 import utils.WebDriverManager;
 
-import static utils.PropertiesReader.getPontoProperties;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,16 +10,21 @@ import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import domain.Jornada;
 
-public class Portal {
+public class Lancamento {
 
-    private static WebDriverManager driver = WebDriverManager.getInstance();
+    WebDriver driver;
+    WebDriverWait wait;
 
-    private static String apontamentosPath = "/Apontamento/Grade";
+    @FindBy(xpath = "//form//a[contains(@href, 'Grade')]")
+    private WebElement linkGradeApontamentos;
 
     // By - WebElements
     // Lancamento
