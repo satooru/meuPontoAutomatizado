@@ -1,27 +1,20 @@
 package pages;
 
-import utils.WebDriverManager;
-
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import domain.Jornada;
 
-public class Lancamento {
-
-    WebDriver driver;
-    WebDriverWait wait;
+public class Lancamento extends Page {
 
     @FindBy(xpath = "//form//input[@id='ddtApontamento']")
     private WebElement inputData;
@@ -54,8 +47,7 @@ public class Lancamento {
     private WebElement linkGradeApontamentos;
 
     public Lancamento() {
-        driver = WebDriverManager.getInstance().getWebDriver();
-        wait = WebDriverManager.getInstance().getWebDriverWait();
+        super();
         PageFactory.initElements(driver, this);
     }
 

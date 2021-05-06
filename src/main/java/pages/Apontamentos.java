@@ -1,24 +1,17 @@
 package pages;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import domain.Jornada;
-import utils.WebDriverManager;
 
-public class Apontamentos {
-
-    WebDriver driver;
-    WebDriverWait wait;
+public class Apontamentos extends Page {
 
     @FindBy(xpath= "//div[@id='gridMVC']//table")
     private WebElement tableApontamentos;
@@ -27,8 +20,7 @@ public class Apontamentos {
     private List<WebElement> tableRowApontamentos;
 
     public Apontamentos() {
-        driver = WebDriverManager.getInstance().getWebDriver();
-        wait = WebDriverManager.getInstance().getWebDriverWait();
+        super();
         PageFactory.initElements(driver, this);
     }
 

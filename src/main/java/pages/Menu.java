@@ -1,25 +1,17 @@
 package pages;
 
-import utils.WebDriverManager;
-
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Menu {
-
-    WebDriver driver;
-    WebDriverWait wait;
+public class Menu extends Page {
 
     @FindBy(xpath = "//div[@id='conteudo']//a[contains(@href, 'Lancamento')]")
     private WebElement linkApontamentoMensal;
 
     public Menu() {
-        driver = WebDriverManager.getInstance().getWebDriver();
-        wait = WebDriverManager.getInstance().getWebDriverWait();
+        super();
         PageFactory.initElements( driver, this);
     }
 

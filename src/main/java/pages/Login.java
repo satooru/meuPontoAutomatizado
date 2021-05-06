@@ -1,18 +1,11 @@
 package pages;
 
-import utils.WebDriverManager;
-
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class Login {
-
-    WebDriver driver;
-    WebDriverWait wait;
+public class Login extends Page {
 
     @FindBy(xpath = "//form//input[@id='Login']")
     private WebElement inputLogin;
@@ -24,8 +17,7 @@ public class Login {
     private WebElement buttonEntrar;
 
     public Login() {
-        driver = WebDriverManager.getInstance().getWebDriver();
-        wait = WebDriverManager.getInstance().getWebDriverWait();
+        super();
         PageFactory.initElements( driver, this);
     }
 
