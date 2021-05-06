@@ -7,7 +7,7 @@ import io.cucumber.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        glue = {"steps", "hooks"},
+        glue = {"step", "hooks"},
         plugin = {"pretty"},
         features = {"src/test/resources/"},
         dryRun = false,
