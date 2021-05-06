@@ -1,19 +1,19 @@
 package pages;
 
-import utils.PropertiesReader;
 import utils.WebDriverManager;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import domain.Jornada;
@@ -23,112 +23,112 @@ public class Lancamento {
     WebDriver driver;
     WebDriverWait wait;
 
+    @FindBy(xpath = "//form//input[@id='ddtApontamento']")
+    private WebElement inputData;
+
+    @FindBy(xpath = "//form//input[@id='nvlEntrada']")
+    private WebElement inputEntrada;
+
+    @FindBy(xpath = "//form//input[@id='nvlAlmoco']")
+    private WebElement inputInicioAlmoco;
+
+    @FindBy(xpath = "//form//input[@id='nvlRetorno']")
+    private WebElement inputFimAlmoco;
+
+    @FindBy(xpath = "//form//input[@id='nvlSaida']")
+    private WebElement inputSaida;
+
+    @FindBy(xpath = "//form//select[@id='ccdComposto']")
+    private WebElement selectProjeto;
+
+    @FindBy(xpath = "//form//input[@type='submit' and @value='Gravar e sair']")
+    private WebElement buttonGravar;
+
+    @FindBy(xpath = "//div[@id='exampleModal']//div[@class='modal-body']")
+    private WebElement modal;
+
+    @FindBys({@FindBy(xpath = "//div[@id='MensagemGravarContinuar']//label[@id='MensagensERRO']")})
+    private List<WebElement> labelAlert;
+
     @FindBy(xpath = "//form//a[contains(@href, 'Grade')]")
     private WebElement linkGradeApontamentos;
 
-    // By - WebElements
-    // Lancamento
-    private static String xpathInputData = "//form//input[@id='ddtApontamento']";
-    private static String xpathInputEntrada = "//form//input[@id='nvlEntrada']";
-    private static String xpathInputInicioAlmoco = "//form//input[@id='nvlAlmoco']";
-    private static String xpathInputFimAlmoco = "//form//input[@id='nvlRetorno']";
-    private static String xpathInputSaida = "//form//input[@id='nvlSaida']";
-    private static String xpathSelectProjeto = "//form//select[@id='ccdComposto']";
-    private static String xpathButtonGravar = "//form//input[@type='submit' and @value='Gravar e sair']";
-    private static String xpathModal = "//div[@id='exampleModal']//div[@class='modal-body']";
-    private static String xpathLabelAlert = "//div[@id='MensagemGravarContinuar']//label[@id='MensagensERRO']";
-    // Apontamentos
-    private static String xpathTableApontamentos = "//div[@id='gridMVC']//table";
-
-    public static void preencherDigitacaoDeMarcacao() {
-        preencherDigitacaoDeMarcacao(new Jornada());
+    public Lancamento() {
+        driver = WebDriverManager.getInstance().getWebDriver();
+        wait = WebDriverManager.getInstance().getWebDriverWait();
+        PageFactory.initElements(driver, this);
     }
 
-    public static void preencherDigitacaoDeMarcacao(Jornada jornada) {
+    public void inputData(String date) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputData));
+        inputData.clear();
+        inputData.sendKeys(date);
+    }
+
+    public void inputEntrada(String startOfWork) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputEntrada));
+        inputEntrada.sendKeys(Keys.HOME);
+        inputEntrada.sendKeys(startOfWork);
+    }
+
+    public void inputInicioAlmoco(String startOfLunch) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputInicioAlmoco));
+        inputInicioAlmoco.sendKeys(Keys.HOME);
+        inputInicioAlmoco.sendKeys(startOfLunch);
+    }
+
+    public void inputFimAlmoco(String endOfLunch) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputFimAlmoco));
+        inputFimAlmoco.sendKeys(Keys.HOME);
+        inputFimAlmoco.sendKeys(endOfLunch);
+    }
+
+    public void inputSaida(String endOFWork) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputSaida));
+        inputSaida.sendKeys(Keys.HOME);
+        inputSaida.sendKeys(endOFWork);
+    }
+
+    public void selectProjetoIndexOption(int index) {
+        wait.until(ExpectedConditions.elementToBeClickable(selectProjeto));
+        Select select = new Select(selectProjeto);
+        select.selectByIndex(index);
+    }
+
+    public void preencherDigitacaoDeMarcacao(Jornada jornada) {
 
         if (jornada.getDiaLocalDate().getDayOfWeek().getValue() > 5) {
             System.out.println("dia " + jornada.getDia() + " e " + DayOfWeek.of(jornada.getDiaLocalDate().getDayOfWeek().getValue()));
             return;
         }
 
-        driver.waitVisibilityOfElementByXPath(xpathInputEntrada, 10);
+        inputData(jornada.getDia());
+        inputEntrada(jornada.getEntrada());
+        inputInicioAlmoco(jornada.getInicioAlmoco());
+        inputFimAlmoco(jornada.getFimAlmoco());
+        inputSaida(jornada.getSaida());
 
-        WebElement inputData = driver.getWebElementByXPath(xpathInputData);
-        WebElement inputEntrada = driver.getWebElementByXPath(xpathInputEntrada);
-        WebElement inputInicioAlmoco = driver.getWebElementByXPath(xpathInputInicioAlmoco);
-        WebElement inputFimAlmoco = driver.getWebElementByXPath(xpathInputFimAlmoco);
-        WebElement inputSaida = driver.getWebElementByXPath(xpathInputSaida);
-
-        //TODO melhorar essa parte aqui. ta dando nojo
-        if (inputEntrada.getAttribute("readonly") != null
-         || inputInicioAlmoco.getAttribute("readonly") != null
-         || inputFimAlmoco.getAttribute("readonly") != null
-         || inputSaida.getAttribute("readonly") != null) {
-            String msg = "um dos campos da marcacao ja estao preenchidos para o dia " + jornada.getDia() + ":\n";
-            if (inputEntrada.getAttribute("readonly") != null)
-                msg = msg + "    inputEntrada\n";
-            if (inputInicioAlmoco.getAttribute("readonly") != null)
-                msg = msg + "    inputInicioAlmoco\n";
-            if (inputFimAlmoco.getAttribute("readonly") != null)
-                msg = msg + "    inputFimAlmoco\n";
-            if (inputSaida.getAttribute("readonly") != null)
-                msg = msg + "    inputSaida\n";
-            System.out.println(msg);
-            return;
-        }
-
-        inputData.clear();
-        inputData.sendKeys(jornada.getDia());
-        inputEntrada.sendKeys(Keys.HOME);
-        inputEntrada.sendKeys(jornada.getEntrada());
-        inputInicioAlmoco.sendKeys(Keys.HOME);
-        inputInicioAlmoco.sendKeys(jornada.getInicioAlmoco());
-        inputFimAlmoco.sendKeys(Keys.HOME);
-        inputFimAlmoco.sendKeys(jornada.getFimAlmoco());
-        inputSaida.sendKeys(Keys.HOME);
-        inputSaida.sendKeys(jornada.getSaida());
-
-        driver.selectComboIndexByXPath(xpathSelectProjeto, 1);
+        selectProjetoIndexOption(1);
     }
 
-    public static void salvarMarcacao() {
-        driver.waitPresenceOfElementByXPath(xpathButtonGravar, 10);
-        driver.clickElementByXPath(xpathButtonGravar);
-        driver.waitPageLoad();
-        driver.getWait().until(ExpectedConditions.or(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathModal)),
-                                                     ExpectedConditions.visibilityOfElementLocated(By.xpath(xpathLabelAlert))));
-        if (driver.getWebDriver().findElements(By.xpath(xpathLabelAlert)).size() > 0
-         && driver.getWebDriver().findElement(By.xpath(xpathLabelAlert)).isDisplayed()) {
-            throw new RuntimeException("Erro ao salvar marcacao. Erro: " + Optional.ofNullable(driver.getTextFromElementByXPath(xpathLabelAlert))
+    public void clickGravar() {
+        wait.until(ExpectedConditions.elementToBeClickable(buttonGravar));
+        buttonGravar.click();
+    }
+
+    public void validateModalMessage() {
+        wait.until(ExpectedConditions.or(ExpectedConditions.visibilityOf(modal),
+                                         ExpectedConditions.visibilityOfAllElements(labelAlert)));
+        if (labelAlert.size() > 0 && labelAlert.get(0).isDisplayed()) {
+            throw new RuntimeException("Erro ao salvar marcacao. Erro: " + Optional.ofNullable(labelAlert.get(0).getText())
                                                                                    .orElse("[nao foi possivel resgatar o erro da pagina, tente manualmente]"));
         }
-        if (!driver.getTextFromElementByXPath(xpathModal).contains("sucesso"))
-            throw new RuntimeException("Esperado 'sucesso' no modal do apontamento. mensagem do modal: " + driver.getTextFromElementByXPath(xpathModal));
+        if (!modal.getText().contains("sucesso"))
+            throw new RuntimeException("Esperado 'sucesso' no modal do apontamento. mensagem do modal: " + modal.getText());
     }
 
-    public static void salvarLastWorkedDate() {
-        PropertiesReader.setPontoProperties("lastWorked.date", LocalDate.now().toString());
-    }
-
-    public static boolean apontamentoPresente(Jornada jornada) {
-        driver.openPage(getPontoProperties("ponto.url") + apontamentosPath);
-        driver.waitVisibilityOfElementByXPath(xpathTableApontamentos);
-
-        List<WebElement> linhas = driver.getWebElementByXPath(xpathTableApontamentos).findElements(By.xpath(".//tbody//tr"));
-        for (WebElement linha : linhas) {
-            if (linha.findElements(By.tagName("td")).get(0).getText().equals(jornada.getDia())) {
-                System.out.println("dia " + jornada.getDia() + " encontrado nos apontamentos");
-                return true;
-            }
-        }
-
-        if (jornada.getDiaLocalDate().getMonthValue() != LocalDate.now().getMonthValue()
-         && jornada.getDiaLocalDate().getDayOfWeek().getValue() == 5) {
-            System.out.println("jornada foi em outro mes");
-            return true;
-        }
-
-        System.out.println("dia da jornada nao encontrada nos lancamentos. dia da jornada: " + jornada.getDia());
-        return false;
+    public void salvarMarcacao() {
+        clickGravar();
+        validateModalMessage();
     }
 }
