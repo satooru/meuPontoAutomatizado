@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
 
-import utils.PropertiesReader;
-
 public class Jornada {
 
     LocalDate dia;
@@ -40,8 +38,7 @@ public class Jornada {
         this.fimAlmoco = this.inicioAlmoco.plusHours(1);
         this.saida = this.entrada.plusHours(9);
         this.dia = Optional.ofNullable(dia)
-                           .orElse(PropertiesReader.getPontoProperties("lastWorked.date").isEmpty() ?
-                                   LocalDate.now() : LocalDate.parse(PropertiesReader.getPontoProperties("lastWorked.date")));
+                           .orElse( LocalDate.now());
     }
 
     public String getEntrada() {
