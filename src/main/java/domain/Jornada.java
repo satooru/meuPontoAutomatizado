@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
 
+import utils.HolidaysUtils;
+
 public class Jornada {
 
     LocalDate dia;
@@ -37,8 +39,8 @@ public class Jornada {
                                     .orElse(LocalTime.parse("12:00").plusMinutes(random.nextInt(91)));
         this.fimAlmoco = this.inicioAlmoco.plusHours(1);
         this.saida = this.entrada.plusHours(9);
-        this.dia = Optional.ofNullable(dia)
-                           .orElse( LocalDate.now());
+        this.dia = HolidaysUtils.checkHolidays(Optional.ofNullable(dia)
+                                                     .orElse( LocalDate.now()));
     }
 
     public String getEntrada() {
