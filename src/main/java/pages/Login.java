@@ -2,34 +2,51 @@ package pages;
 
 import utils.WebDriverManager;
 
-import static utils.PropertiesReader.getPontoProperties;
-
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Login {
 
-    private static WebDriverManager driver = WebDriverManager.getInstance();
+    WebDriver driver;
+    WebDriverWait wait;
 
-    // By - WebElements
-    static String xpathIframe = "//iframe";
-    static String xpathIframeMainLogin = "//frame[@id = 'MainLogin']";
-    static String xpathLogin = "//form//input[@id='Login']";
-    static String xpathPassword = "//form//input[@id='Senha']";
-    static String xpathConectar = "//form//input[@type = 'submit' and @value = 'ENTRAR' ]";
+    @FindBy(xpath = "//form//input[@id='Login']")
+    private WebElement inputLogin;
 
-    public static void loginPonto() {
-        String url = getPontoProperties("ponto.url");
-        String login = getPontoProperties("ponto.login");
-        String password = getPontoProperties("ponto.password");
+    @FindBy(xpath = "//form//input[@id='Senha']")
+    private WebElement inputSenha;
 
-        driver.openPage(url);
-        driver.waitPageLoad();
+    @FindBy(xpath = "//form//input[@type = 'submit' and @value = 'ENTRAR' ]")
+    private WebElement buttonEntrar;
 
-        driver.waitElementToBeClickableByXPath(xpathLogin, 10);
-        driver.inputTextByElementXPath(xpathLogin, login);
-        driver.inputTextByElementXPath(xpathPassword, password);
+    public Login() {
+        driver = WebDriverManager.getInstance().getWebDriver();
+        wait = WebDriverManager.getInstance().getWebDriverWait();
+        PageFactory.initElements( driver, this);
+    }
 
-        driver.clickElementByXPath(xpathConectar);
-        driver.waitPageLoad();
+    public void inputLogin(String login) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputLogin));
+        inputLogin.sendKeys(login);
+    }
+
+    public void inputSenha(String password) {
+        wait.until(ExpectedConditions.elementToBeClickable(inputSenha));
+        inputSenha.sendKeys(password);
+    }
+
+    public void clickEntrar() {
+        wait.until(ExpectedConditions.elementToBeClickable(buttonEntrar));
+        buttonEntrar.click();
+    }
+
+    public void loginPonto(String login, String password) {
+        inputLogin(login);
+        inputSenha(password);
+        clickEntrar();
     }
 }
